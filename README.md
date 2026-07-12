@@ -95,4 +95,4 @@ Use the **Quick Login** panel on the login page or enter these credentials:
 
 ## 📈 Compliance & Verification Plan
 
-Refer to the interactive [walkthrough guide](walkthrough.md) and presentation guidelines inside the `demo_walkthrough_guide.md` file for step-by-step scripts on verifying dispatcher recommendation engines, license warnings, soft-deletions, odometer warnings, and cost calculations.
+Refer to the interactive [walkthrough guide](demo_walkthrough_guide.md) for step-by-step scripts on verifying dispatcher recommendation engines, license warnings, soft-deletions, odometer warnings, and cost calculations.
