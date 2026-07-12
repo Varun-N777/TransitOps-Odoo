@@ -55,7 +55,7 @@ router.get('/', authenticateToken, async (req, res) => {
       const placeholders = vehicleIds.map((_, i) => `$${i + 1}`).join(',');
       const tripsRes = await db.query(
         `SELECT * FROM trips WHERE vehicle_id IN (${placeholders}) OR vehicle_id IS NULL`,
-        // Note: if region is specified, we filter trips that were assigned to the region's vehicles
+        vehicleIds
       );
       trips = tripsRes.rows;
 

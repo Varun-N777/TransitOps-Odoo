@@ -104,7 +104,7 @@ const Reports = () => {
       ]);
     } else if (activeReport === 'costs') {
       filename = 'operational_costs_report.csv';
-      headers = ['Vehicle', 'License Plate', 'Fuel Cost ($)', 'Maintenance Cost ($)', 'Total Operational Cost ($)'];
+      headers = ['Vehicle', 'License Plate', 'Fuel Cost (₹)', 'Maintenance Cost (₹)', 'Total Operational Cost (₹)'];
       rows = data.map(r => [
         `"${r.make} ${r.model}"`,
         r.license_plate,
@@ -114,7 +114,7 @@ const Reports = () => {
       ]);
     } else if (activeReport === 'roi') {
       filename = 'vehicle_roi_report.csv';
-      headers = ['Vehicle', 'License Plate', 'Revenue ($)', 'Operational Cost ($)', 'Acquisition Cost ($)', 'ROI Ratio'];
+      headers = ['Vehicle', 'License Plate', 'Revenue (₹)', 'Operational Cost (₹)', 'Acquisition Cost (₹)', 'ROI Ratio'];
       rows = data.map(r => [
         `"${r.make} ${r.model}"`,
         r.license_plate,
@@ -376,9 +376,9 @@ const Reports = () => {
                   <tr key={row.vehicle_id} className="border-b border-slate-800 hover:bg-slate-850/30 transition-colors">
                     <td className="p-4 font-bold text-white text-sm">{row.make} {row.model}</td>
                     <td className="p-4 text-slate-300 font-medium text-sm">{row.license_plate}</td>
-                    <td className="p-4 text-slate-300 text-sm">${parseFloat(row.costs.fuel_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                    <td className="p-4 text-slate-300 text-sm">${parseFloat(row.costs.maintenance_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                    <td className="p-4 font-bold text-amber-400 text-sm">${parseFloat(row.costs.operational_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                    <td className="p-4 text-slate-300 text-sm">₹{parseFloat(row.costs.fuel_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                    <td className="p-4 text-slate-300 text-sm">₹{parseFloat(row.costs.maintenance_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                    <td className="p-4 font-bold text-amber-400 text-sm">₹{parseFloat(row.costs.operational_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                   </tr>
                 ))}
               </tbody>
@@ -437,9 +437,9 @@ const Reports = () => {
                     <tr key={row.vehicle_id} className="border-b border-slate-800 hover:bg-slate-850/30 transition-colors">
                       <td className="p-4 font-bold text-white text-sm">{row.make} {row.model}</td>
                       <td className="p-4 text-slate-300 font-medium text-sm">{row.license_plate}</td>
-                      <td className="p-4 text-slate-300 text-sm">${parseFloat(row.roi.revenue).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                      <td className="p-4 text-slate-300 text-sm">${parseFloat(row.roi.operational_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                      <td className="p-4 text-slate-300 text-sm">${parseFloat(row.roi.acquisition_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                      <td className="p-4 text-slate-300 text-sm">₹{parseFloat(row.roi.revenue).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                      <td className="p-4 text-slate-300 text-sm">₹{parseFloat(row.roi.operational_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                      <td className="p-4 text-slate-300 text-sm">₹{parseFloat(row.roi.acquisition_cost).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                       <td className={`p-4 font-bold text-sm ${parseFloat(row.roi.roi_value) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {roiPercent}%
                       </td>

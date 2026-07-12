@@ -256,10 +256,15 @@ const Vehicles = () => {
                 <option value="Los Angeles">Los Angeles</option>
                 <option value="Houston">Houston</option>
                 <option value="Atlanta">Atlanta</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Kolkata">Kolkata</option>
               </select>
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Acquisition Cost ($)</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Acquisition Cost (₹)</label>
               <input
                 type="number"
                 step="0.01"
@@ -330,7 +335,7 @@ const Vehicles = () => {
                   <td className="p-4 text-slate-300 text-sm">{vehicle.home_depot}</td>
                   <td className="p-4 text-slate-300 text-sm">{parseFloat(vehicle.max_cargo_weight).toLocaleString()} kg</td>
                   <td className="p-4 text-slate-300 text-sm">{parseInt(vehicle.odometer).toLocaleString()} km</td>
-                  <td className="p-4 text-slate-300 text-sm">${parseFloat(vehicle.acquisition_cost).toLocaleString()}</td>
+                  <td className="p-4 text-slate-300 text-sm">₹{parseFloat(vehicle.acquisition_cost).toLocaleString()}</td>
                   <td className="p-4">
                     <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
                       vehicle.status === 'Available' ? 'bg-green-500/10 text-green-400 border-green-500/20' :

@@ -244,6 +244,11 @@ const Trips = () => {
                 <option value="Los Angeles">Los Angeles</option>
                 <option value="Houston">Houston</option>
                 <option value="Atlanta">Atlanta</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Kolkata">Kolkata</option>
               </select>
             </div>
             <div>
@@ -258,6 +263,11 @@ const Trips = () => {
                 <option value="Los Angeles">Los Angeles</option>
                 <option value="Houston">Houston</option>
                 <option value="Atlanta">Atlanta</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Kolkata">Kolkata</option>
               </select>
             </div>
             <div>
@@ -282,7 +292,7 @@ const Trips = () => {
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Revenue ($)</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Revenue (₹)</label>
               <input
                 type="number"
                 step="0.01"
@@ -480,7 +490,7 @@ const Trips = () => {
                     <span className="text-[10px] text-slate-500 font-medium">Created: {new Date(trip.created_at).toLocaleDateString()}</span>
                   </td>
                   <td className="p-4 text-slate-300 text-sm">{parseFloat(trip.cargo_weight).toLocaleString()} kg</td>
-                  <td className="p-4 text-slate-300 text-sm font-semibold">${parseFloat(trip.revenue).toFixed(2)}</td>
+                  <td className="p-4 text-slate-300 text-sm font-semibold">₹{parseFloat(trip.revenue).toFixed(2)}</td>
                   <td className="p-4 text-slate-300 text-sm">
                     {trip.vehicle_plate ? (
                       <div>

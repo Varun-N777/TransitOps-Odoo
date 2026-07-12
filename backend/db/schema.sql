@@ -26,7 +26,7 @@ CREATE TABLE vehicles (
     max_cargo_weight DECIMAL(10, 2) NOT NULL, -- in kg
     odometer INTEGER NOT NULL DEFAULT 0, -- in km
     status VARCHAR(50) NOT NULL DEFAULT 'Available' CHECK (status IN ('Available', 'On Trip', 'In Shop', 'Retired')),
-    home_depot VARCHAR(100) NOT NULL CHECK (home_depot IN ('New York', 'Chicago', 'Los Angeles', 'Houston', 'Atlanta')),
+    home_depot VARCHAR(100) NOT NULL CHECK (home_depot IN ('New York', 'Chicago', 'Los Angeles', 'Houston', 'Atlanta', 'Mumbai', 'Delhi', 'Bengaluru', 'Chennai', 'Kolkata')),
     acquisition_cost DECIMAL(10, 2) NOT NULL DEFAULT 0.00
 );
 
@@ -44,8 +44,8 @@ CREATE TABLE drivers (
 -- Create Trips table
 CREATE TABLE trips (
     id SERIAL PRIMARY KEY,
-    source VARCHAR(100) NOT NULL CHECK (source IN ('New York', 'Chicago', 'Los Angeles', 'Houston', 'Atlanta')),
-    destination VARCHAR(100) NOT NULL CHECK (destination IN ('New York', 'Chicago', 'Los Angeles', 'Houston', 'Atlanta')),
+    source VARCHAR(100) NOT NULL CHECK (source IN ('New York', 'Chicago', 'Los Angeles', 'Houston', 'Atlanta', 'Mumbai', 'Delhi', 'Bengaluru', 'Chennai', 'Kolkata')),
+    destination VARCHAR(100) NOT NULL CHECK (destination IN ('New York', 'Chicago', 'Los Angeles', 'Houston', 'Atlanta', 'Mumbai', 'Delhi', 'Bengaluru', 'Chennai', 'Kolkata')),
     cargo_weight DECIMAL(10, 2) NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'Draft' CHECK (status IN ('Draft', 'Dispatched', 'Completed', 'Cancelled')),
     vehicle_id INTEGER REFERENCES vehicles(id) ON DELETE SET NULL,
@@ -102,11 +102,11 @@ CREATE TABLE alerts (
 -- The hash for 'password' using bcrypt with 10 rounds is: $2a$10$fV3M2l6t1tN7a4y/wV6nkuN6NlyY18uH3U6tXyqXJb1x0m0m0m0m0 (or similar)
 -- We will insert them directly or seed via setup.js. Let's insert standard hashes:
 INSERT INTO users (username, password_hash, role) VALUES
-('manager', '$2a$10$xWJkKCeIhy8vV8aLhH0l7OHLdJdC9CymWpZ86fCg7lW3L2wXGvJ4e', 'Fleet Manager'),
-('driver1', '$2a$10$xWJkKCeIhy8vV8aLhH0l7OHLdJdC9CymWpZ86fCg7lW3L2wXGvJ4e', 'Driver'),
-('driver2', '$2a$10$xWJkKCeIhy8vV8aLhH0l7OHLdJdC9CymWpZ86fCg7lW3L2wXGvJ4e', 'Driver'),
-('safety', '$2a$10$xWJkKCeIhy8vV8aLhH0l7OHLdJdC9CymWpZ86fCg7lW3L2wXGvJ4e', 'Safety Officer'),
-('analyst', '$2a$10$xWJkKCeIhy8vV8aLhH0l7OHLdJdC9CymWpZ86fCg7lW3L2wXGvJ4e', 'Financial Analyst');
+('manager', '$2a$10$VEw/DoCbHSON88.8aJ4fZ.WUOicHX1vS6.aV5agK2chs7yqNPiAOW', 'Fleet Manager'),
+('driver1', '$2a$10$VEw/DoCbHSON88.8aJ4fZ.WUOicHX1vS6.aV5agK2chs7yqNPiAOW', 'Driver'),
+('driver2', '$2a$10$VEw/DoCbHSON88.8aJ4fZ.WUOicHX1vS6.aV5agK2chs7yqNPiAOW', 'Driver'),
+('safety', '$2a$10$VEw/DoCbHSON88.8aJ4fZ.WUOicHX1vS6.aV5agK2chs7yqNPiAOW', 'Safety Officer'),
+('analyst', '$2a$10$VEw/DoCbHSON88.8aJ4fZ.WUOicHX1vS6.aV5agK2chs7yqNPiAOW', 'Financial Analyst');
 
 -- Seed Vehicles
 INSERT INTO vehicles (make, model, year, license_plate, max_cargo_weight, odometer, status, home_depot, acquisition_cost) VALUES
@@ -114,14 +114,19 @@ INSERT INTO vehicles (make, model, year, license_plate, max_cargo_weight, odomet
 ('Freightliner', 'Cascadia', 2021, 'FL-234-NY', 38000.00, 120000, 'Available', 'Chicago', 130000.00),
 ('Kenworth', 'T680', 2023, 'KW-567-LA', 35000.00, 45000, 'Available', 'Los Angeles', 160000.00),
 ('Peterbilt', '579', 2020, 'PB-109-TX', 37000.00, 185000, 'In Shop', 'Houston', 125000.00),
-('Mack', 'Anthem', 2022, 'MA-456-GA', 36000.00, 95000, 'Available', 'Atlanta', 150000.00);
+('Mack', 'Anthem', 2022, 'MA-456-GA', 36000.00, 95000, 'Available', 'Atlanta', 150000.00),
+('Tata', 'Prima 4025', 2023, 'MH-12-PQ-9999', 40000.00, 15000, 'Available', 'Mumbai', 120000.00),
+('Mahindra', 'Blazo X', 2022, 'DL-01-AB-1234', 35000.00, 22000, 'Available', 'Delhi', 110000.00),
+('BharatBenz', '3523R', 2023, 'KA-03-MM-5678', 35000.00, 18000, 'Available', 'Bengaluru', 115000.00);
 
 -- Seed Drivers
 INSERT INTO drivers (user_id, name, license_number, license_expiry, safety_score, status) VALUES
 (2, 'John Doe', 'DL-882736', '2027-10-15', 92.50, 'Available'),
 (3, 'Jane Smith', 'DL-992837', '2026-09-20', 97.00, 'Available'),
 (NULL, 'Bob Johnson', 'DL-112233', '2024-05-12', 85.00, 'Available'), -- Expired license, not linked to user
-(NULL, 'Alice Williams', 'DL-445566', '2028-12-01', 99.00, 'Suspended'); -- Suspended driver
+(NULL, 'Alice Williams', 'DL-445566', '2028-12-01', 99.00, 'Suspended'),
+(NULL, 'Aarav Sharma', 'DL-IND-9988', '2029-01-10', 96.00, 'Available'),
+(NULL, 'Vihaan Patel', 'DL-IND-7766', '2028-05-15', 94.50, 'Available'); -- Suspended driver
 
 -- Seed Trips
 INSERT INTO trips (source, destination, cargo_weight, status, vehicle_id, driver_id, revenue, created_at, completed_at) VALUES

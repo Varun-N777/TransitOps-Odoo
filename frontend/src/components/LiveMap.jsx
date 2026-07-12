@@ -7,7 +7,12 @@ const DEPOTS = {
   'Chicago': [41.8781, -87.6298],
   'Los Angeles': [34.0522, -118.2437],
   'Houston': [29.7604, -95.3698],
-  'Atlanta': [33.7490, -84.3880]
+  'Atlanta': [33.7490, -84.3880],
+  'Mumbai': [19.0760, 72.8777],
+  'Delhi': [28.7041, 77.1025],
+  'Bengaluru': [12.9716, 77.5946],
+  'Chennai': [13.0827, 80.2707],
+  'Kolkata': [22.5726, 88.3639]
 };
 
 // Create custom icons using public assets
@@ -77,9 +82,10 @@ const LiveMap = ({ vehicles = [], trips = [] }) => {
     };
   }, [trips]);
 
-  // Center map on USA central point
-  const mapCenter = [37.8, -96.0];
-  const zoomLevel = 4;
+  // Center map dynamically based on vehicle locations
+  const hasIndiaVehicles = vehicles.some(v => ['Mumbai', 'Delhi', 'Bengaluru', 'Chennai', 'Kolkata'].includes(v.home_depot));
+  const mapCenter = hasIndiaVehicles ? [20.5937, 78.9629] : [37.8, -96.0];
+  const zoomLevel = hasIndiaVehicles ? 5 : 4;
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-slate-50">

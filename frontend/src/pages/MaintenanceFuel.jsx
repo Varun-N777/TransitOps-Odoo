@@ -273,7 +273,7 @@ const MaintenanceFuel = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Initial Cost Estimation ($)</label>
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Initial Cost Estimation (₹)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -318,7 +318,7 @@ const MaintenanceFuel = () => {
                   <form onSubmit={handleCloseMaintSubmit} className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-md w-full space-y-4 shadow-2xl">
                     <h3 className="text-lg font-bold text-white">Close Repair Order</h3>
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Final Invoice Cost ($)</label>
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Final Invoice Cost (₹)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -379,7 +379,7 @@ const MaintenanceFuel = () => {
                         </td>
                         <td className="p-4 text-slate-300 text-sm font-medium">{m.description}</td>
                         <td className="p-4 text-slate-300 text-sm">{parseInt(m.odometer_at_service).toLocaleString()} km</td>
-                        <td className="p-4 text-slate-300 text-sm font-semibold">${parseFloat(m.cost).toFixed(2)}</td>
+                        <td className="p-4 text-slate-300 text-sm font-semibold">₹{parseFloat(m.cost).toFixed(2)}</td>
                         <td className="p-4">
                           <div className="text-xs text-slate-300">
                             <span className="block font-medium">Start: {m.start_date ? m.start_date.split('T')[0] : 'N/A'}</span>
@@ -495,7 +495,7 @@ const MaintenanceFuel = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Total Price Paid ($)</label>
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Total Price Paid (₹)</label>
                       <input
                         type="number"
                         step="0.01"
@@ -551,7 +551,7 @@ const MaintenanceFuel = () => {
                           <td className="p-4 text-slate-300 text-sm font-semibold">{log.driver_name}</td>
                           <td className="p-4 text-slate-300 text-sm">{parseFloat(log.fuel_amount).toFixed(2)} L</td>
                           <td className="p-4 text-slate-300 text-sm">{parseFloat(log.distance_traveled).toLocaleString()} km</td>
-                          <td className="p-4 text-slate-300 text-sm font-bold">${parseFloat(log.cost).toFixed(2)}</td>
+                          <td className="p-4 text-slate-300 text-sm font-bold">₹{parseFloat(log.cost).toFixed(2)}</td>
                           <td className="p-4 text-sm font-semibold text-blue-400">
                             {eff.toFixed(2)} km/L
                           </td>
@@ -591,7 +591,7 @@ const MaintenanceFuel = () => {
                           {exp.type}
                         </span>
                       </td>
-                      <td className="p-4 text-slate-300 text-sm font-bold">${parseFloat(exp.amount).toFixed(2)}</td>
+                      <td className="p-4 text-slate-300 text-sm font-bold">₹{parseFloat(exp.amount).toFixed(2)}</td>
                       <td className="p-4 text-slate-400 text-xs font-medium">{exp.description}</td>
                     </tr>
                   ))}

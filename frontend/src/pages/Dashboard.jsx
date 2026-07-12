@@ -130,6 +130,11 @@ const Dashboard = () => {
             <option value="Los Angeles">Los Angeles</option>
             <option value="Houston">Houston</option>
             <option value="Atlanta">Atlanta</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Bengaluru">Bengaluru</option>
+            <option value="Chennai">Chennai</option>
+            <option value="Kolkata">Kolkata</option>
           </select>
           <button 
             onClick={fetchData} 
@@ -168,7 +173,7 @@ const Dashboard = () => {
         <div className="col-span-1 md:col-span-1 lg:col-span-1">
           <KPICard
             title="Billed Rev"
-            value={kpis.financials ? `$${parseFloat(kpis.financials.revenue).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '$0.00'}
+            value={kpis.financials ? `₹${parseFloat(kpis.financials.revenue).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '₹0.00'}
             subtitle="Dispatched & Completed"
             icon={DollarSign}
             color="text-indigo-500"
@@ -178,7 +183,7 @@ const Dashboard = () => {
         <div className="col-span-1 md:col-span-1 lg:col-span-1">
           <KPICard
             title="Op Cost"
-            value={kpis.financials ? `$${parseFloat(kpis.financials.operationalCost).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '$0.00'}
+            value={kpis.financials ? `₹${parseFloat(kpis.financials.operationalCost).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '₹0.00'}
             subtitle="Fuel + Maintenance"
             icon={Activity}
             color="text-amber-500"
