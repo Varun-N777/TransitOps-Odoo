@@ -54,8 +54,8 @@ TransitOps secures routes and administrative forms depending on user role:
 Create a `.env` file in the `backend/` directory:
 ```env
 PORT=5000
-DATABASE_URL=postgresql://postgres.leprswogkdzfkfqjuuvp:Uzumymw%40607_%23@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres
-JWT_SECRET=supersecretjwtkeyforauth
+DATABASE_URL=your_postgresql_supabase_connection_string
+JWT_SECRET=your_jwt_signing_secret
 ```
 
 Initialize database tables and seed Indian assets:
