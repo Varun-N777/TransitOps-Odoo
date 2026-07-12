@@ -82,11 +82,11 @@ const LiveMap = ({ vehicles = [], trips = [] }) => {
   const zoomLevel = 4;
 
   return (
-    <div className="w-full h-[550px] bg-slate-900 border border-slate-800 rounded-xl relative overflow-hidden shadow-lg">
+    <div className="w-full h-full relative overflow-hidden bg-slate-50">
       <MapContainer center={mapCenter} zoom={zoomLevel} className="w-full h-full">
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" // Modern dark mode tile
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" // Modern light mode tile
         />
 
         {/* Depots static markers */}

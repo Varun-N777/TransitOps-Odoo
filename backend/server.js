@@ -32,8 +32,13 @@ app.get('/', (req, res) => {
   res.json({ message: 'TransitOps API running smoothly' });
 });
 
-// Start Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`TransitOps server listening on port ${PORT}`);
-});
+// Start Server (only if not running on Vercel)
+if (process.env.NODE_ENV !== 'production' || process.env.IS_LOCAL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`TransitOps server listening on port ${PORT}`);
+  });
+}
+
+// Export for Vercel serverless
+module.exports = app;

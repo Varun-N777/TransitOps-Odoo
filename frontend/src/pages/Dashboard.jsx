@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import KPICard from '../components/KPICard';
 import LiveMap from '../components/LiveMap';
@@ -8,11 +9,28 @@ import {
   DollarSign, 
   AlertTriangle,
   RotateCcw,
-  CheckCircle
+  CheckCircle,
+  Activity
 } from 'lucide-react';
+
+const getContainerVariants = (shouldReduceMotion) => ({
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: shouldReduceMotion ? 0 : 0.1 }
+  }
+});
+
+const getItemVariants = (shouldReduceMotion) => ({
+  hidden: { opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 30 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 200, damping: 20, duration: shouldReduceMotion ? 0.1 : undefined } }
+});
 
 const Dashboard = () => {
   const { token } = useAuth();
+  const shouldReduceMotion = useReducedMotion();
+  const containerVariants = getContainerVariants(shouldReduceMotion);
+  const itemVariants = getItemVariants(shouldReduceMotion);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [region, setRegion] = useState('');
@@ -23,22 +41,15 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const url = region ? `/api/dashboard?region=${encodeURIComponent(region)}` : '/api/dashboard';
-      const res = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
       const result = await res.json();
       setData(result);
 
-      // Fetch vehicles and trips list directly for Leaflet
       const [vehRes, tripsRes] = await Promise.all([
         fetch(region ? `/api/vehicles?home_depot=${encodeURIComponent(region)}` : '/api/vehicles', {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        fetch('/api/trips', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        fetch('/api/trips', { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
       const vehList = await vehRes.json();
       const tripsList = await tripsRes.json();
@@ -53,18 +64,14 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (token) {
-      fetchData();
-    }
+    if (token) fetchData();
   }, [token, region]);
 
   const handleResolveAlert = async (alertId) => {
     try {
       const res = await fetch(`/api/dashboard/alerts/${alertId}/resolve`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        headers: { 'Authorization': `Bearer ${token}` }
       });
       if (res.ok) {
         fetchData();
@@ -78,29 +85,44 @@ const Dashboard = () => {
   };
 
   if (loading && !data) {
-    return <div className="p-8 text-center text-slate-400">Loading dashboard metrics...</div>;
+    return (
+      <div className="flex h-full items-center justify-center min-h-[50vh]">
+        <motion.div 
+          animate={{ rotate: 360 }} 
+          transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+          className="text-blue-500 bg-white p-4 rounded-2xl shadow-xl border border-slate-100"
+        >
+          <Activity size={32} />
+        </motion.div>
+      </div>
+    );
   }
 
   const kpis = data?.kpis || {};
   const alerts = data?.alerts || [];
 
   return (
-    <div className="space-y-6">
-      
-      {/* Top Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Fleet Command Center</h2>
-          <p className="text-slate-400 text-sm mt-1">Real-time status overview and alert metrics</p>
+    <motion.div 
+      variants={containerVariants} 
+      initial="hidden" 
+      animate="show" 
+      className="max-w-7xl mx-auto space-y-8 pb-12"
+    >
+      {/* Cinematic Header */}
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-slate-200/60 pb-6 pt-2">
+        <div className="max-w-2xl">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tighter leading-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500">
+            Fleet Intelligence
+          </h2>
+          <p className="text-slate-500 text-lg mt-3 font-medium">Real-time status overview and predictive anomaly detection.</p>
         </div>
 
         {/* Region Filter */}
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Depot Region:</span>
+        <div className="flex items-center gap-3 bg-white/80 p-2 rounded-2xl shadow-sm backdrop-blur-md border border-slate-200">
           <select
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            className="bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm font-medium"
+            className="bg-transparent text-slate-700 focus:outline-none focus:ring-0 px-3 py-1 font-bold cursor-pointer"
           >
             <option value="">All Regions</option>
             <option value="New York">New York</option>
@@ -111,120 +133,135 @@ const Dashboard = () => {
           </select>
           <button 
             onClick={fetchData} 
-            className="p-2.5 bg-slate-900 border border-slate-800 rounded-xl hover:bg-slate-850 text-slate-400 hover:text-white transition-colors"
+            className="p-2.5 bg-slate-50 hover:bg-slate-100 rounded-xl text-slate-600 transition-colors shadow-sm cursor-pointer"
             title="Refresh statistics"
           >
-            <RotateCcw size={16} />
+            <RotateCcw size={18} />
           </button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KPICard
-          title="Fleet Utilization"
-          value={kpis.vehicles ? `${kpis.vehicles.onTrip}/${kpis.vehicles.total}` : '0/0'}
-          subtitle="Vehicles On Trip vs Total"
-          icon={Truck}
-          color="text-blue-400"
-        />
-        <KPICard
-          title="Operational Status"
-          value={kpis.vehicles ? `${kpis.vehicles.available} Available` : '0 Available'}
-          subtitle={kpis.vehicles ? `${kpis.vehicles.inShop} In Shop / ${kpis.vehicles.retired} Retired` : '0 In Shop'}
-          icon={MapPin}
-          color="text-green-400"
-        />
-        <KPICard
-          title="Billed Revenue"
-          value={kpis.financials ? `$${parseFloat(kpis.financials.revenue).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '$0.00'}
-          subtitle="Dispatched + Completed trips"
-          icon={DollarSign}
-          color="text-emerald-400"
-        />
-        <KPICard
-          title="Operational Cost"
-          value={kpis.financials ? `$${parseFloat(kpis.financials.operationalCost).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '$0.00'}
-          subtitle="Fuel Cost + Maintenance Cost"
-          icon={DollarSign}
-          color="text-amber-400"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Live Map Panel */}
-        <div className="xl:col-span-2 space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-bold text-white">Live Operations Map</h3>
-            <span className="flex items-center gap-1.5 text-xs text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/20 font-medium">
-              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-              Live Sync (30x Multiplier)
-            </span>
-          </div>
-          <LiveMap vehicles={vehicles} trips={trips} />
+      {/* Grid Flow Dense Layout (Gapless Bento Grid concept) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 grid-flow-dense">
+        
+        {/* KPIs */}
+        <div className="col-span-1 md:col-span-1 lg:col-span-1">
+          <KPICard
+            title="Utilization"
+            value={kpis.vehicles ? `${kpis.vehicles.onTrip}/${kpis.vehicles.total}` : '0/0'}
+            subtitle="Active / Total"
+            icon={Truck}
+            color="text-blue-500"
+            delay={0.1}
+          />
+        </div>
+        <div className="col-span-1 md:col-span-1 lg:col-span-1">
+          <KPICard
+            title="Status"
+            value={kpis.vehicles ? `${kpis.vehicles.available} Avail` : '0 Avail'}
+            subtitle={kpis.vehicles ? `${kpis.vehicles.inShop} Shop / ${kpis.vehicles.retired} Ret` : '0 Shop'}
+            icon={MapPin}
+            color="text-emerald-500"
+            delay={0.2}
+          />
+        </div>
+        <div className="col-span-1 md:col-span-1 lg:col-span-1">
+          <KPICard
+            title="Billed Rev"
+            value={kpis.financials ? `$${parseFloat(kpis.financials.revenue).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '$0.00'}
+            subtitle="Dispatched & Completed"
+            icon={DollarSign}
+            color="text-indigo-500"
+            delay={0.3}
+          />
+        </div>
+        <div className="col-span-1 md:col-span-1 lg:col-span-1">
+          <KPICard
+            title="Op Cost"
+            value={kpis.financials ? `$${parseFloat(kpis.financials.operationalCost).toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '$0.00'}
+            subtitle="Fuel + Maintenance"
+            icon={Activity}
+            color="text-amber-500"
+            delay={0.4}
+          />
         </div>
 
-        {/* Alerts card */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-white font-sans">Predictive Alerts & Fuel Anomalies</h3>
-          <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 h-[550px] flex flex-col">
-            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-4 border-b border-slate-800 pb-3">
-              Active Alerts ({alerts.length})
+        {/* Live Map (Spans 3 cols) */}
+        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 lg:col-span-3 row-span-2 bg-white rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden flex flex-col relative group">
+          <div className="absolute top-6 left-6 z-[1000] bg-white/90 backdrop-blur-xl px-5 py-2.5 rounded-full border border-slate-200 shadow-lg flex items-center gap-3">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
             </span>
-            <div className="flex-1 overflow-y-auto space-y-4 pr-1">
-              {alerts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-slate-500 space-y-2">
-                  <CheckCircle size={32} className="text-green-500/40" />
-                  <p className="text-sm font-medium">No alerts detected in fleet</p>
+            <span className="text-sm font-extrabold text-slate-800 tracking-wide uppercase">Live Tracking</span>
+          </div>
+          <div className="flex-1 w-full min-h-[400px] lg:h-[600px] z-0">
+             <LiveMap vehicles={vehicles} trips={trips} />
+          </div>
+        </motion.div>
+
+        {/* Alerts (Spans 1 col, 2 rows) */}
+        <motion.div variants={itemVariants} className="col-span-1 md:col-span-2 lg:col-span-1 row-span-2 bg-white rounded-[2rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-6 md:p-8 flex flex-col min-h-[400px] lg:h-[600px]">
+          <div className="flex justify-between items-end mb-6 border-b border-slate-100 pb-5">
+            <h3 className="text-2xl font-extrabold text-slate-800 tracking-tight">Anomalies</h3>
+            <span className="bg-red-50 text-red-600 px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm">
+              {alerts.length} Detect
+            </span>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+            {alerts.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-slate-400 space-y-4">
+                <div className="p-4 bg-emerald-50 rounded-full">
+                  <CheckCircle size={40} className="text-emerald-500" />
                 </div>
-              ) : (
-                alerts.map((alert) => (
-                  <div 
-                    key={alert.id}
-                    className={`border rounded-xl p-4 space-y-3 transition-colors ${
-                      alert.severity === 'Critical'
-                        ? 'bg-red-500/5 border-red-500/20 hover:bg-red-500/10'
-                        : 'bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start gap-2">
-                      <div className="flex items-center gap-2">
-                        <AlertTriangle size={16} className={alert.severity === 'Critical' ? 'text-red-400' : 'text-amber-400'} />
-                        <span className="text-xs font-bold text-white">{alert.type}</span>
+                <p className="text-base font-bold text-slate-500">Fleet operating normally</p>
+              </div>
+            ) : (
+              alerts.map((alert, idx) => (
+                <motion.div 
+                  initial={shouldReduceMotion ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: shouldReduceMotion ? 0 : 0.5 + (idx * 0.1) }}
+                  key={alert.id}
+                  className={`border rounded-2xl p-5 space-y-4 transition-all hover:shadow-lg ${
+                    alert.severity === 'Critical'
+                      ? 'bg-gradient-to-br from-red-50/50 to-white border-red-100'
+                      : 'bg-gradient-to-br from-amber-50/50 to-white border-amber-100'
+                  }`}
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className={`p-1.5 rounded-lg ${alert.severity === 'Critical' ? 'bg-red-100' : 'bg-amber-100'}`}>
+                        <AlertTriangle size={16} className={alert.severity === 'Critical' ? 'text-red-600' : 'text-amber-600'} />
                       </div>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        alert.severity === 'Critical' 
-                          ? 'bg-red-500/15 text-red-400' 
-                          : 'bg-amber-500/15 text-amber-400'
-                      }`}>
-                        {alert.severity}
-                      </span>
-                    </div>
-
-                    <p className="text-xs text-slate-300 font-medium leading-relaxed">
-                      {alert.description}
-                    </p>
-
-                    <div className="flex justify-between items-center text-[10px] text-slate-500">
-                      <span>Vehicle: {alert.vehicle_plate}</span>
-                      {!String(alert.id).startsWith('pred-') && (
-                        <button
-                          onClick={() => handleResolveAlert(alert.id)}
-                          className="text-blue-400 hover:text-blue-300 font-semibold uppercase tracking-wider cursor-pointer"
-                        >
-                          Resolve Alert
-                        </button>
-                      )}
+                      <span className="text-sm font-extrabold text-slate-800 leading-tight">{alert.type}</span>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
 
-    </div>
+                  <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                    {alert.description}
+                  </p>
+
+                  <div className="flex justify-between items-center text-xs text-slate-500 pt-3 border-t border-slate-200/60 mt-3">
+                    <span className="font-bold bg-slate-100 px-2 py-1 rounded-md">{alert.vehicle_plate}</span>
+                    {!String(alert.id).startsWith('pred-') && (
+                      <button
+                        onClick={() => handleResolveAlert(alert.id)}
+                        className="text-blue-600 hover:text-blue-800 font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      >
+                        Resolve
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </div>
+        </motion.div>
+
+      </div>
+    </motion.div>
   );
 };
 

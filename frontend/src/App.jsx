@@ -9,15 +9,16 @@ import Drivers from './pages/Drivers';
 import Trips from './pages/Trips';
 import MaintenanceFuel from './pages/MaintenanceFuel';
 import Reports from './pages/Reports';
+import Landing from './pages/Landing';
 
 const ProtectedLayout = ({ children }) => {
   const { token, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400">
-        Loading TransitOps...
-      </div>
+        <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center text-slate-500">
+          Loading TransitOps...
+        </div>
     );
   }
 
@@ -26,9 +27,9 @@ const ProtectedLayout = ({ children }) => {
   }
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-100 font-sans">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#F0F4F8] text-slate-800 font-sans">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto p-8">
+      <main className="flex-1 overflow-y-auto p-4 md:p-8 perspective-1000">
         {children}
       </main>
     </div>
@@ -42,7 +43,9 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           
-          <Route path="/" element={
+          <Route path="/" element={<Landing />} />
+          
+          <Route path="/dashboard" element={
             <ProtectedLayout>
               <Dashboard />
             </ProtectedLayout>

@@ -26,7 +26,7 @@ const Sidebar = () => {
   const menuItems = [
     {
       name: 'Dashboard',
-      path: '/',
+      path: '/dashboard',
       icon: LayoutDashboard,
       allowedRoles: ['Fleet Manager', 'Driver', 'Safety Officer', 'Financial Analyst']
     },
@@ -63,26 +63,26 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-screen text-slate-300">
+    <div className="w-20 md:w-64 bg-white/70 backdrop-blur-md border-r border-slate-200 flex flex-col h-screen text-slate-600 shadow-sm transition-all duration-300 z-40">
       {/* Brand Header */}
-      <div className="p-6 border-b border-slate-800 flex items-center gap-3">
-        <div className="bg-blue-600 p-2 rounded-lg text-white">
+      <div className="p-4 md:p-6 border-b border-slate-200 flex items-center justify-center md:justify-start gap-3">
+        <div className="bg-gradient-to-tr from-blue-600 to-sky-400 p-2 rounded-xl text-white shadow-lg shadow-blue-500/30">
           <Truck size={24} />
         </div>
-        <div>
-          <h1 className="font-bold text-white text-lg tracking-tight">TransitOps</h1>
-          <span className="text-xs text-slate-500 font-medium font-sans">Fleet Operations</span>
+        <div className="hidden md:block">
+          <h1 className="font-extrabold text-slate-800 text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-500">TransitOps</h1>
+          <span className="text-xs text-slate-400 font-semibold tracking-widest uppercase">Fleet Ops</span>
         </div>
       </div>
 
       {/* User Info Block */}
-      <div className="p-4 mx-4 my-4 bg-slate-950 rounded-xl border border-slate-800 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-slate-850 border border-slate-700 flex items-center justify-center text-blue-400 font-bold">
+      <div className="p-2 md:p-4 mx-2 md:mx-4 my-4 bg-white rounded-2xl border border-slate-100 shadow-sm flex items-center justify-center md:justify-start gap-3 transition-all hover:shadow-md">
+        <div className="w-10 h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-blue-500 font-bold shadow-sm">
           {user?.username?.charAt(0).toUpperCase() || 'U'}
         </div>
-        <div className="overflow-hidden">
-          <p className="text-sm font-semibold text-white truncate">{user?.username || 'Guest'}</p>
-          <p className="text-xs text-slate-500 font-medium truncate">{user?.role || 'Guest Role'}</p>
+        <div className="hidden md:block overflow-hidden">
+          <p className="text-sm font-bold text-slate-700 truncate">{user?.username || 'Guest'}</p>
+          <p className="text-xs text-slate-400 font-medium truncate">{user?.role || 'Guest Role'}</p>
         </div>
       </div>
 
@@ -97,13 +97,13 @@ const Sidebar = () => {
                 key={item.name} 
                 className="flex items-center justify-between p-3 rounded-lg text-slate-600 cursor-not-allowed group relative"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center md:justify-start gap-3">
                   <item.icon size={20} />
-                  <span className="text-sm font-medium">{item.name}</span>
+                  <span className="text-sm font-semibold hidden md:block">{item.name}</span>
                 </div>
-                <Lock size={14} className="text-slate-700" />
+                <Lock size={14} className="text-slate-400 hidden md:block" />
                 
-                <div className="absolute left-full ml-2 px-2 py-1 bg-slate-950 text-xs text-slate-400 rounded border border-slate-800 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none">
+                <div className="absolute left-full ml-2 px-3 py-1.5 bg-slate-800 text-xs text-white rounded-lg border border-slate-700 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 pointer-events-none shadow-xl">
                   Requires: {item.allowedRoles.join(', ')}
                 </div>
               </div>
@@ -115,28 +115,28 @@ const Sidebar = () => {
               key={item.name}
               to={item.path}
               className={({ isActive }) => 
-                `flex items-center gap-3 p-3 rounded-lg text-sm font-medium transition-colors ${
+                `flex items-center justify-center md:justify-start gap-3 p-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
                   isActive 
-                    ? 'bg-blue-600/10 text-blue-400 border-l-2 border-blue-500 pl-2.5' 
-                    : 'hover:bg-slate-800 hover:text-white'
+                    ? 'bg-blue-50 text-blue-600 shadow-sm md:border-r-4 border-blue-500' 
+                    : 'hover:bg-slate-50 hover:text-slate-800'
                 }`
               }
             >
-              <item.icon size={20} />
-              <span>{item.name}</span>
+              <item.icon size={20} className={({ isActive }) => isActive ? 'text-blue-500' : 'text-slate-400'} />
+              <span className="hidden md:block">{item.name}</span>
             </NavLink>
           );
         })}
       </nav>
 
       {/* Logout button */}
-      <div className="p-4 border-t border-slate-800">
+      <div className="p-4 border-t border-slate-200 bg-slate-50/50">
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full p-3 rounded-lg text-sm font-medium hover:bg-red-500/10 hover:text-red-400 transition-colors text-slate-400"
+          className="flex items-center justify-center md:justify-start gap-3 w-full p-3 rounded-xl text-sm font-semibold hover:bg-red-50 hover:text-red-600 transition-all text-slate-500"
         >
           <LogOut size={20} />
-          <span>Logout</span>
+          <span className="hidden md:block">Logout</span>
         </button>
       </div>
     </div>
